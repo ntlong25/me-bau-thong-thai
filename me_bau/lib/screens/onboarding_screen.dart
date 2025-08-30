@@ -33,12 +33,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return ChangeNotifierProvider.value(
       value: _viewModel,
       child: Consumer<OnboardingViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
-            backgroundColor: Colors.pink.shade50,
+            backgroundColor: colorScheme.surface,
             body: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(24.0),
@@ -49,7 +50,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     children: [
                       // Header
                       Icon(Icons.favorite,
-                          size: 80, color: Colors.pink.shade600),
+                          size: 80, color: colorScheme.primary),
                       const SizedBox(height: 24),
 
                       Text(
@@ -57,7 +58,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
-                          color: Colors.pink.shade700,
+                          color: colorScheme.onSurface,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -66,7 +67,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       Text(
                         'Hãy cho chúng tôi biết một chút về bạn',
                         style: TextStyle(
-                            fontSize: 16, color: Colors.grey.shade600),
+                            fontSize: 16, color: colorScheme.onSurfaceVariant),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 48),
@@ -109,7 +110,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         child: Text(
                           'Bỏ qua (Có thể cập nhật sau)',
                           style: TextStyle(
-                              color: Colors.grey.shade600, fontSize: 14),
+                              color: colorScheme.onSurfaceVariant, fontSize: 14),
                         ),
                       ),
                     ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../viewmodels/onboarding_viewmodel.dart';
 import '../screens/main_app_screen.dart';
+import '../services/pregnancy_service.dart';
 
 class OnboardingActivity {
   final BuildContext context;
@@ -15,10 +15,9 @@ class OnboardingActivity {
     viewModel.setLoading(true);
 
     try {
-      // Save user info to SharedPreferences
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('userName', viewModel.userName);
-      await prefs.setString('userAge', viewModel.userAge.toString());
+      // Save user info using PregnancyService
+      await PregnancyService.saveUserName(viewModel.userName);
+      await PregnancyService.saveUserAge(viewModel.userAge);
 
       // Navigate to main app
       if (context.mounted) {

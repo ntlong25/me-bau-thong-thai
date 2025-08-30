@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../viewmodels/profile_viewmodel.dart';
+import '../viewmodels/home_viewmodel.dart';
+import '../main.dart'; // Import main.dart to access themeModeNotifier
 
 class ProfileActivity {
   final BuildContext context;
   final ProfileViewModel viewModel;
+  final HomeViewModel homeViewModel;
 
-  ProfileActivity(this.context, this.viewModel);
+  ProfileActivity(this.context, this.viewModel, this.homeViewModel);
 
   Future<void> initialize() async {
     await loadUserInfo();
@@ -28,44 +32,151 @@ class ProfileActivity {
   }
 
   void navigateToEditProfile() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Tính năng đang phát triển')),
+    final TextEditingController nameController = TextEditingController(text: viewModel.userName);
+    final TextEditingController ageController = TextEditingController(text: viewModel.userAge?.toString());
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Chỉnh sửa thông tin'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: const InputDecoration(labelText: 'Tên của bạn'),
+            ),
+            TextField(
+              controller: ageController,
+              decoration: const InputDecoration(labelText: 'Tuổi của bạn'),
+              keyboardType: TextInputType.number,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Hủy')),
+          ElevatedButton(
+            onPressed: () async {
+              final newName = nameController.text.trim();
+              final newAge = int.tryParse(ageController.text.trim());
+
+              if (newName.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Tên không được để trống')),
+                );
+                return;
+              }
+              if (newAge == null || newAge <= 0) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Tuổi không hợp lệ')),
+                );
+                return;
+              }
+
+              await viewModel.updateUserInfo(newName, newAge);
+              await homeViewModel.loadData(); // Refresh home screen
+              if (context.mounted) {
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('Lưu'),
+          ),
+        ],
+      ),
     );
   }
 
   void navigateToDueDateManagement() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Tính năng đang phát triển')),
-    );
+    showDatePicker(
+      context: context,
+      initialDate: homeViewModel.dueDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2050),
+    ).then((pickedDate) async {
+      if (pickedDate != null) {
+        await homeViewModel.saveDueDate(pickedDate);
+        // No need to call homeViewModel.loadData() here, saveDueDate already does it
+      }
+    });
   }
 
   void navigateToNotificationsSettings() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Tính năng đang phát triển')),
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Cài đặt thông báo'),
+        content: const Text('Các tùy chọn thông báo sẽ được hiển thị tại đây.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Đóng')),
+        ],
+      ),
     );
   }
 
   void navigateToLanguageSettings() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Tính năng đang phát triển')),
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Cài đặt ngôn ngữ'),
+        content: const Text('Các tùy chọn ngôn ngữ sẽ được hiển thị tại đây.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Đóng')),
+        ],
+      ),
     );
   }
 
   void navigateToThemeSettings() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Tính năng đang phát triển')),
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Cài đặt giao diện'),
+        content: const Text('Các tùy chọn giao diện (sáng/tối) sẽ được hiển thị tại đây.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Đóng')),
+        ],
+      ),
     );
   }
 
+  void toggleThemeMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    ThemeMode currentMode = themeModeNotifier.value;
+    ThemeMode newMode;
+
+    if (currentMode == ThemeMode.light) {
+      newMode = ThemeMode.dark;
+    } else {
+      newMode = ThemeMode.light;
+    }
+
+    themeModeNotifier.value = newMode;
+    await prefs.setString('themeMode', newMode == ThemeMode.light ? 'light' : 'dark');
+  }
+
   void navigateToHelp() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Tính năng đang phát triển')),
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Trợ giúp'),
+        content: const Text('Nội dung trợ giúp sẽ được hiển thị tại đây.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Đóng')),
+        ],
+      ),
     );
   }
 
   void navigateToFeedback() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Tính năng đang phát triển')),
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Gửi phản hồi'),
+        content: const Text('Biểu mẫu gửi phản hồi sẽ được hiển thị tại đây.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Đóng')),
+        ],
+      ),
     );
   }
 

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../services/pregnancy_service.dart';
 
 class ProfileViewModel extends ChangeNotifier {
   String? _userName;
-  String? _userAge;
+  int? _userAge;
   bool _isLoading = true;
 
   // Getters
   String? get userName => _userName;
-  String? get userAge => _userAge;
+  int? get userAge => _userAge;
   bool get isLoading => _isLoading;
 
   // Computed properties
@@ -21,12 +21,8 @@ class ProfileViewModel extends ChangeNotifier {
   Future<void> loadUserInfo() async {
     _setLoading(true);
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final userName = prefs.getString('userName');
-      final userAge = prefs.getString('userAge');
-
-      _userName = userName;
-      _userAge = userAge;
+      _userName = await PregnancyService.loadUserName();
+      _userAge = await PregnancyService.loadUserAge();
 
       notifyListeners();
     } catch (e) {
@@ -37,12 +33,11 @@ class ProfileViewModel extends ChangeNotifier {
   }
 
   // Update user information
-  Future<void> updateUserInfo(String name, String age) async {
+  Future<void> updateUserInfo(String name, int age) async {
     _setLoading(true);
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('userName', name.trim());
-      await prefs.setString('userAge', age);
+      await PregnancyService.saveUserName(name.trim());
+      await PregnancyService.saveUserAge(age);
 
       _userName = name.trim();
       _userAge = age;
@@ -58,8 +53,7 @@ class ProfileViewModel extends ChangeNotifier {
   // Clear user data (logout)
   Future<void> clearUserData() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.clear();
+      await PregnancyService.clearUserData();
 
       _userName = null;
       _userAge = null;

@@ -24,12 +24,13 @@ class CustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Container(
       margin: margin ?? const EdgeInsets.symmetric(vertical: 8.0),
       child: Material(
         elevation: showShadow ? (elevation ?? 4.0) : 0,
         borderRadius: borderRadius ?? BorderRadius.circular(16),
-        color: backgroundColor ?? Colors.white,
+        color: backgroundColor ?? colorScheme.surface,
         child: InkWell(
           onTap: onTap,
           borderRadius: borderRadius ?? BorderRadius.circular(16),
@@ -39,7 +40,7 @@ class CustomCard extends StatelessWidget {
               borderRadius: borderRadius ?? BorderRadius.circular(16),
               border: showShadow
                   ? null
-                  : Border.all(color: Colors.grey.shade300, width: 1),
+                  : Border.all(color: colorScheme.outline, width: 1),
             ),
             child: child,
           ),
@@ -71,6 +72,7 @@ class InfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return CustomCard(
       onTap: onTap,
       backgroundColor: backgroundColor,
@@ -79,12 +81,12 @@ class InfoCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: (iconColor ?? Colors.pink.shade100).withValues(alpha: 0.2),
+              color: (iconColor ?? colorScheme.primaryContainer),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               icon,
-              color: iconColor ?? Colors.pink.shade600,
+              color: iconColor ?? colorScheme.onPrimaryContainer,
               size: 24,
             ),
           ),
@@ -95,16 +97,17 @@ class InfoCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
+                    color: colorScheme.onSurface,
                   ),
                 ),
                 if (subtitle != null) ...[
                   const SizedBox(height: 4),
                   Text(
                     subtitle!,
-                    style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+                    style: TextStyle(fontSize: 14, color: colorScheme.onSurfaceVariant),
                   ),
                 ],
               ],
@@ -135,6 +138,7 @@ class ProgressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return CustomCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,7 +148,7 @@ class ProgressCard extends StatelessWidget {
               if (icon != null) ...[
                 Icon(
                   icon,
-                  color: progressColor ?? Colors.pink.shade600,
+                  color: progressColor ?? colorScheme.primary,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
@@ -152,9 +156,10 @@ class ProgressCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
+                    color: colorScheme.onSurface,
                   ),
                 ),
               ),
@@ -163,15 +168,15 @@ class ProgressCard extends StatelessWidget {
           const SizedBox(height: 12),
           LinearProgressIndicator(
             value: progress,
-            backgroundColor: Colors.grey.shade200,
+            backgroundColor: colorScheme.surfaceVariant,
             valueColor: AlwaysStoppedAnimation<Color>(
-              progressColor ?? Colors.pink.shade600,
+              progressColor ?? colorScheme.primary,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             progressText,
-            style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+            style: TextStyle(fontSize: 14, color: colorScheme.onSurfaceVariant),
           ),
         ],
       ),

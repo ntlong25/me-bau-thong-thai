@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../services/pregnancy_service.dart';
 
 class HomeViewModel extends ChangeNotifier {
@@ -36,8 +35,7 @@ class HomeViewModel extends ChangeNotifier {
     _setLoading(true);
     try {
       final dueDate = await PregnancyService.loadDueDate();
-      final prefs = await SharedPreferences.getInstance();
-      final userName = prefs.getString('userName');
+      final userName = await PregnancyService.loadUserName();
 
       _dueDate = dueDate;
       _userName = userName;

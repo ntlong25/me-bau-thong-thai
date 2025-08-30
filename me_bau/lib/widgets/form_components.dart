@@ -37,6 +37,7 @@ class CustomTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return TextFormField(
       controller: controller,
       validator: validator,
@@ -49,35 +50,37 @@ class CustomTextFormField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: labelText,
         hintText: hintText,
-        prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
-        suffixIcon: suffixIcon != null ? Icon(suffixIcon) : null,
+        prefixIcon: prefixIcon != null ? Icon(prefixIcon, color: colorScheme.onSurfaceVariant) : null,
+        suffixIcon: suffixIcon != null ? Icon(suffixIcon, color: colorScheme.onSurfaceVariant) : null,
+        labelStyle: TextStyle(color: colorScheme.onSurfaceVariant),
+        hintStyle: TextStyle(color: colorScheme.onSurfaceVariant.withOpacity(0.7)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: borderColor ?? Colors.grey.shade300,
+            color: borderColor ?? colorScheme.outline,
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: borderColor ?? Colors.grey.shade300,
+            color: borderColor ?? colorScheme.outline,
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: Colors.pink.shade400,
+            color: colorScheme.primary,
             width: 2,
           ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(
-            color: Colors.red.shade400,
+            color: colorScheme.error,
           ),
         ),
         filled: true,
-        fillColor: fillColor ?? Colors.white,
+        fillColor: fillColor ?? colorScheme.surface,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 16,
@@ -112,13 +115,14 @@ class CustomNumberPickerContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: backgroundColor ?? Colors.white,
+        color: backgroundColor ?? colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(color: colorScheme.outline),
       ),
       child: Column(
         children: [
@@ -127,7 +131,7 @@ class CustomNumberPickerContainer extends StatelessWidget {
               if (icon != null) ...[
                 Icon(
                   icon,
-                  color: iconColor ?? Colors.pink.shade600,
+                  color: iconColor ?? colorScheme.primary,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
@@ -137,7 +141,7 @@ class CustomNumberPickerContainer extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
-                  color: Colors.grey.shade700,
+                  color: colorScheme.onSurface,
                 ),
               ),
             ],
@@ -146,7 +150,7 @@ class CustomNumberPickerContainer extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 16),
             decoration: BoxDecoration(
-              color: Colors.pink.shade50,
+              color: colorScheme.primaryContainer,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
@@ -155,14 +159,14 @@ class CustomNumberPickerContainer extends StatelessWidget {
                 IconButton(
                   onPressed:
                       value > minValue ? () => onChanged(value - 1) : null,
-                  icon: const Icon(Icons.remove),
-                  color: Colors.pink.shade600,
+                  icon: Icon(Icons.remove, color: colorScheme.onPrimaryContainer),
+                  color: colorScheme.onPrimaryContainer,
                 ),
                 const SizedBox(width: 16),
                 Text(
                   '$value',
                   style: TextStyle(
-                    color: Colors.pink.shade700,
+                    color: colorScheme.onPrimaryContainer,
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
@@ -171,8 +175,8 @@ class CustomNumberPickerContainer extends StatelessWidget {
                 IconButton(
                   onPressed:
                       value < maxValue ? () => onChanged(value + 1) : null,
-                  icon: const Icon(Icons.add),
-                  color: Colors.pink.shade600,
+                  icon: Icon(Icons.add, color: colorScheme.onPrimaryContainer),
+                  color: colorScheme.onPrimaryContainer,
                 ),
               ],
             ),
@@ -182,7 +186,7 @@ class CustomNumberPickerContainer extends StatelessWidget {
             'Giá trị: $value',
             style: TextStyle(
               fontSize: 14,
-              color: Colors.grey.shade600,
+              color: colorScheme.onSurfaceVariant,
             ),
           ),
         ],
@@ -212,6 +216,7 @@ class CustomDatePickerButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton.icon(
@@ -223,8 +228,8 @@ class CustomDatePickerButton extends StatelessWidget {
               : label,
         ),
         style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor ?? Colors.pink.shade600,
-          foregroundColor: foregroundColor ?? Colors.white,
+          backgroundColor: backgroundColor ?? colorScheme.primary,
+          foregroundColor: foregroundColor ?? colorScheme.onPrimary,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -235,6 +240,7 @@ class CustomDatePickerButton extends StatelessWidget {
   }
 
   Future<void> _selectDate(BuildContext context) async {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: selectedDate ?? DateTime.now(),
@@ -243,11 +249,11 @@ class CustomDatePickerButton extends StatelessWidget {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: Colors.pink.shade600,
-              onPrimary: Colors.white,
-              surface: Colors.white,
-              onSurface: Colors.black,
+            colorScheme: colorScheme.copyWith(
+              primary: colorScheme.primary,
+              onPrimary: colorScheme.onPrimary,
+              surface: colorScheme.surface,
+              onSurface: colorScheme.onSurface,
             ),
           ),
           child: child!,
@@ -281,12 +287,14 @@ class CustomCheckboxListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 4.0),
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
+      color: colorScheme.surface,
       child: CheckboxListTile(
         title: Text(
           title,
@@ -294,7 +302,7 @@ class CustomCheckboxListTile extends StatelessWidget {
             fontSize: 16,
             fontWeight: FontWeight.w600,
             decoration: value ? TextDecoration.lineThrough : null,
-            color: value ? Colors.grey : Colors.black,
+            color: value ? colorScheme.onSurfaceVariant : colorScheme.onSurface,
           ),
         ),
         subtitle: subtitle != null
@@ -302,13 +310,13 @@ class CustomCheckboxListTile extends StatelessWidget {
                 subtitle!,
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.grey.shade600,
+                  color: colorScheme.onSurfaceVariant,
                 ),
               )
             : null,
         value: value,
         onChanged: onChanged,
-        activeColor: activeColor ?? Colors.pink,
+        activeColor: activeColor ?? colorScheme.primary,
         controlAffinity: ListTileControlAffinity.leading,
       ),
     );
@@ -336,18 +344,21 @@ class CustomSwitchTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 4.0),
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
+      color: colorScheme.surface,
       child: SwitchListTile(
         title: Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
+            color: colorScheme.onSurface,
           ),
         ),
         subtitle: subtitle != null
@@ -355,14 +366,14 @@ class CustomSwitchTile extends StatelessWidget {
                 subtitle!,
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.grey.shade600,
+                  color: colorScheme.onSurfaceVariant,
                 ),
               )
             : null,
         value: value,
         onChanged: onChanged,
-        activeColor: activeColor ?? Colors.pink,
-        secondary: icon != null ? Icon(icon) : null,
+        activeColor: activeColor ?? colorScheme.primary,
+        secondary: icon != null ? Icon(icon, color: colorScheme.onSurfaceVariant) : null,
       ),
     );
   }

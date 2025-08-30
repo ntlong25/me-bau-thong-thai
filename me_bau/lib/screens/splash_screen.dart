@@ -33,12 +33,13 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return ChangeNotifierProvider.value(
       value: _viewModel,
       child: Consumer<SplashViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
-            backgroundColor: Colors.pink.shade50,
+            backgroundColor: colorScheme.background,
             body: Center(
               child: AnimatedBuilder(
                 animation: Listenable.merge(
@@ -56,11 +57,11 @@ class _SplashScreenState extends State<SplashScreen>
                             width: 120,
                             height: 120,
                             decoration: BoxDecoration(
-                              color: Colors.pink.shade100,
+                              color: colorScheme.primaryContainer,
                               borderRadius: BorderRadius.circular(30),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.pink.withValues(alpha: 0.3),
+                                  color: colorScheme.onSurface.withOpacity(0.3),
                                   blurRadius: 20,
                                   offset: const Offset(0, 10),
                                 ),
@@ -69,7 +70,7 @@ class _SplashScreenState extends State<SplashScreen>
                             child: Icon(
                               Icons.favorite,
                               size: 60,
-                              color: Colors.pink.shade600,
+                              color: colorScheme.onPrimaryContainer,
                             ),
                           ),
                           const SizedBox(height: 32),
@@ -80,7 +81,7 @@ class _SplashScreenState extends State<SplashScreen>
                             style: TextStyle(
                               fontSize: 28,
                               fontWeight: FontWeight.bold,
-                              color: Colors.pink.shade700,
+                              color: colorScheme.onSurface,
                               letterSpacing: 1.2,
                             ),
                           ),
@@ -91,7 +92,7 @@ class _SplashScreenState extends State<SplashScreen>
                             'Hành trình cùng mẹ và bé',
                             style: TextStyle(
                               fontSize: 16,
-                              color: Colors.pink.shade500,
+                              color: colorScheme.onSurfaceVariant,
                               fontStyle: FontStyle.italic,
                             ),
                           ),
@@ -104,7 +105,7 @@ class _SplashScreenState extends State<SplashScreen>
                             child: CircularProgressIndicator(
                               strokeWidth: 3,
                               valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.pink.shade400,
+                                colorScheme.primary,
                               ),
                             ),
                           ),

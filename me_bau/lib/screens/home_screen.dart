@@ -6,62 +6,60 @@ import '../widgets/custom_card.dart';
 import '../widgets/loading_widget.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final Function(int) onNavigateToTab;
+  final HomeViewModel viewModel;
+  const HomeScreen({super.key, required this.onNavigateToTab, required this.viewModel});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late HomeViewModel _viewModel;
   late HomeActivity _activity;
 
   @override
   void initState() {
     super.initState();
-    _viewModel = HomeViewModel();
-    _activity = HomeActivity(context, _viewModel);
+    _activity = HomeActivity(context, widget.viewModel, widget.onNavigateToTab);
     _activity.initialize();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: _viewModel,
-      child: Consumer<HomeViewModel>(
-        builder: (context, viewModel, child) {
-          return LoadingOverlay(
-            isLoading: viewModel.isLoading,
-            child: RefreshIndicator(
-              onRefresh: _activity.refresh,
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildWelcomeSection(viewModel),
-                    const SizedBox(height: 24),
-                    _buildPregnancyStatusSection(viewModel),
-                    const SizedBox(height: 24),
-                    _buildQuickActionsSection(viewModel),
-                    const SizedBox(height: 24),
-                    _buildTipsSection(viewModel),
-                  ],
-                ),
+    return Consumer<HomeViewModel>(
+      builder: (context, viewModel, child) {
+        return LoadingOverlay(
+          isLoading: viewModel.isLoading,
+          child: RefreshIndicator(
+            onRefresh: _activity.refresh,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildWelcomeSection(viewModel),
+                  const SizedBox(height: 24),
+                  _buildPregnancyStatusSection(viewModel),
+                  const SizedBox(height: 24),
+                  _buildQuickActionsSection(viewModel),
+                  const SizedBox(height: 24),
+                  _buildTipsSection(viewModel),
+                ],
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
   Widget _buildWelcomeSection(HomeViewModel viewModel) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.pink.shade50, Colors.pink.shade100],
+                gradient: LinearGradient(
+          colors: [colorScheme.primaryContainer, colorScheme.primary.withAlpha(128)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -75,13 +73,13 @@ class _HomeScreenState extends State<HomeScreen> {
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: Colors.pink.shade700,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             'Chúc bạn một ngày tốt lành!',
-            style: TextStyle(fontSize: 16, color: Colors.pink.shade600),
+            style: TextStyle(fontSize: 16, color: colorScheme.onSurfaceVariant),
           ),
         ],
       ),
@@ -96,20 +94,21 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildSetupCard() {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return CustomCard(
       child: Column(
         children: [
-          Icon(Icons.calendar_today, size: 48, color: Colors.pink.shade400),
+          Icon(Icons.calendar_today, size: 48, color: colorScheme.primary),
           const SizedBox(height: 16),
-          const Text(
+          Text(
             'Bắt đầu theo dõi thai kỳ',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: colorScheme.onSurface),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
           Text(
             'Nhập ngày dự sinh để bắt đầu hành trình',
-            style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+            style: TextStyle(fontSize: 14, color: colorScheme.onSurfaceVariant),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 20),
@@ -117,11 +116,11 @@ class _HomeScreenState extends State<HomeScreen> {
             width: double.infinity,
             child: ElevatedButton.icon(
               onPressed: () => _activity.selectDueDate(),
-              icon: const Icon(Icons.add),
-              label: const Text('Nhập Ngày Dự Sinh'),
+              icon: Icon(Icons.add, color: colorScheme.onPrimary),
+              label: Text('Nhập Ngày Dự Sinh', style: TextStyle(color: colorScheme.onPrimary)),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.pink.shade600,
-                foregroundColor: Colors.white,
+                backgroundColor: colorScheme.primary,
+                foregroundColor: colorScheme.onPrimary,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -135,6 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildPregnancyStatusCard(HomeViewModel viewModel) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return CustomCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -155,14 +155,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       'Tình trạng thai kỳ',
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.grey.shade600,
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
                     Text(
                       viewModel.pregnancyStatusText,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                   ],
@@ -196,18 +197,19 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildStatusItem(String title, String value, IconData icon) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Column(
       children: [
-        Icon(icon, color: Colors.pink.shade400, size: 20),
+        Icon(icon, color: colorScheme.primary, size: 20),
         const SizedBox(height: 4),
         Text(
           title,
-          style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+          style: TextStyle(fontSize: 12, color: colorScheme.onSurfaceVariant),
         ),
         const SizedBox(height: 2),
         Text(
           value,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: colorScheme.onSurface),
           textAlign: TextAlign.center,
         ),
       ],
@@ -215,6 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildQuickActionsSection(HomeViewModel viewModel) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -223,7 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.grey.shade800,
+            color: colorScheme.onSurface,
           ),
         ),
         const SizedBox(height: 12),
@@ -235,6 +238,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildQuickActionCard(Map<String, dynamic> action) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return CustomCard(
       onTap: () => _activity.navigateToQuickAction(action['title']),
       child: Row(
@@ -242,12 +246,12 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: (action['color'] as Color).withValues(alpha: 0.2),
+              color: colorScheme.primaryContainer,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               action['icon'] as IconData,
-              color: action['color'] as Color,
+              color: colorScheme.onPrimaryContainer,
               size: 24,
             ),
           ),
@@ -258,26 +262,28 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(
                   action['title'] as String,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
+                    color: colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   action['description'] as String,
-                  style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+                  style: TextStyle(fontSize: 14, color: colorScheme.onSurfaceVariant),
                 ),
               ],
             ),
           ),
-          Icon(Icons.arrow_forward_ios, color: Colors.grey.shade400, size: 16),
+          Icon(Icons.arrow_forward_ios, color: colorScheme.onSurfaceVariant, size: 16),
         ],
       ),
     );
   }
 
   Widget _buildTipsSection(HomeViewModel viewModel) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -286,7 +292,7 @@ class _HomeScreenState extends State<HomeScreen> {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.grey.shade800,
+            color: colorScheme.onSurface,
           ),
         ),
         const SizedBox(height: 12),
@@ -296,18 +302,19 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildTipCard(Map<String, dynamic> tip) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return CustomCard(
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.green.shade100,
+              color: colorScheme.tertiaryContainer,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               tip['icon'] as IconData,
-              color: Colors.green.shade600,
+              color: colorScheme.onTertiaryContainer,
               size: 24,
             ),
           ),
@@ -318,15 +325,16 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(
                   tip['title'] as String,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
+                    color: colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   tip['description'] as String,
-                  style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+                  style: TextStyle(fontSize: 14, color: colorScheme.onSurfaceVariant),
                 ),
               ],
             ),

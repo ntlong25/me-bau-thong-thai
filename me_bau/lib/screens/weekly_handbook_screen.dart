@@ -36,6 +36,7 @@ class _WeeklyHandbookScreenState extends State<WeeklyHandbookScreen>
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return ChangeNotifierProvider.value(
       value: _viewModel,
       child: Consumer<WeeklyHandbookViewModel>(
@@ -65,7 +66,7 @@ class _WeeklyHandbookScreenState extends State<WeeklyHandbookScreen>
                                           Icon(
                                             Icons.info_outline,
                                             size: 64,
-                                            color: Colors.grey.shade400,
+                                            color: colorScheme.onSurfaceVariant,
                                           ),
                                           const SizedBox(height: 16),
                                           Text(
@@ -73,7 +74,7 @@ class _WeeklyHandbookScreenState extends State<WeeklyHandbookScreen>
                                             style: TextStyle(
                                               fontSize: 24,
                                               fontWeight: FontWeight.bold,
-                                              color: Colors.grey.shade600,
+                                              color: colorScheme.onSurface,
                                             ),
                                           ),
                                           const SizedBox(height: 8),
@@ -81,7 +82,7 @@ class _WeeklyHandbookScreenState extends State<WeeklyHandbookScreen>
                                             'Chưa có dữ liệu cho tuần này',
                                             style: TextStyle(
                                               fontSize: 16,
-                                              color: Colors.grey.shade500,
+                                              color: colorScheme.onSurfaceVariant,
                                             ),
                                             textAlign: TextAlign.center,
                                           ),
@@ -90,7 +91,7 @@ class _WeeklyHandbookScreenState extends State<WeeklyHandbookScreen>
                                             'Vui lòng chọn tuần khác để xem thông tin',
                                             style: TextStyle(
                                               fontSize: 14,
-                                              color: Colors.grey.shade400,
+                                              color: colorScheme.onSurfaceVariant,
                                             ),
                                             textAlign: TextAlign.center,
                                           ),
@@ -106,10 +107,10 @@ class _WeeklyHandbookScreenState extends State<WeeklyHandbookScreen>
                                       children: [
                                         Text(
                                           viewModel.weekTitle,
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontSize: 26,
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.pink,
+                                            color: colorScheme.primary,
                                           ),
                                         ),
                                         const SizedBox(height: 20),
@@ -142,10 +143,10 @@ class _WeeklyHandbookScreenState extends State<WeeklyHandbookScreen>
                 Container(
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: colorScheme.surface,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withValues(alpha: 0.2),
+                        color: colorScheme.onSurface.withOpacity(0.2),
                         spreadRadius: 1,
                         blurRadius: 5,
                         offset: const Offset(0, -2),
@@ -163,8 +164,8 @@ class _WeeklyHandbookScreenState extends State<WeeklyHandbookScreen>
                               onPressed: () => _activity
                                   .navigateToWeek(viewModel.currentWeek - 1),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.purple.shade100,
-                                foregroundColor: Colors.purple.shade800,
+                                backgroundColor: colorScheme.secondaryContainer,
+                                foregroundColor: colorScheme.onSecondaryContainer,
                                 elevation: 3,
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 16),
@@ -172,13 +173,13 @@ class _WeeklyHandbookScreenState extends State<WeeklyHandbookScreen>
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                               ),
-                              child: const Row(
+                              child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(Icons.arrow_back_ios, size: 16),
+                                  Icon(Icons.arrow_back_ios, size: 16, color: colorScheme.onSecondaryContainer),
                                   SizedBox(width: 8),
-                                  Text('Tuần Trước'),
+                                  Text('Tuần Trước', style: TextStyle(color: colorScheme.onSecondaryContainer)),
                                 ],
                               ),
                             ),
@@ -192,8 +193,8 @@ class _WeeklyHandbookScreenState extends State<WeeklyHandbookScreen>
                               onPressed: () => _activity
                                   .navigateToWeek(viewModel.currentWeek + 1),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.pink.shade100,
-                                foregroundColor: Colors.pink.shade800,
+                                backgroundColor: colorScheme.primaryContainer,
+                                foregroundColor: colorScheme.onPrimaryContainer,
                                 elevation: 3,
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 16),
@@ -201,13 +202,13 @@ class _WeeklyHandbookScreenState extends State<WeeklyHandbookScreen>
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                               ),
-                              child: const Row(
+                              child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text('Tuần Sau'),
+                                  Text('Tuần Sau', style: TextStyle(color: colorScheme.onPrimaryContainer)),
                                   SizedBox(width: 8),
-                                  Icon(Icons.arrow_forward_ios, size: 16),
+                                  Icon(Icons.arrow_forward_ios, size: 16, color: colorScheme.onPrimaryContainer),
                                 ],
                               ),
                             ),
@@ -219,21 +220,21 @@ class _WeeklyHandbookScreenState extends State<WeeklyHandbookScreen>
                           child: ElevatedButton(
                             onPressed: () => _activity.navigateToHome(),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue.shade100,
-                              foregroundColor: Colors.blue.shade800,
+                              backgroundColor: colorScheme.tertiaryContainer,
+                              foregroundColor: colorScheme.onTertiaryContainer,
                               elevation: 3,
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
                               ),
                             ),
-                            child: const Row(
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(Icons.home, size: 16),
+                                Icon(Icons.home, size: 16, color: colorScheme.onTertiaryContainer),
                                 SizedBox(width: 8),
-                                Text('Về Trang Chủ'),
+                                Text('Về Trang Chủ', style: TextStyle(color: colorScheme.onTertiaryContainer)),
                               ],
                             ),
                           ),
@@ -250,24 +251,26 @@ class _WeeklyHandbookScreenState extends State<WeeklyHandbookScreen>
   }
 
   Widget _buildSection(String title, String content) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Colors.purple,
+            color: colorScheme.primary,
           ),
         ),
         const SizedBox(height: 8),
         Text(
           content,
-          style: const TextStyle(fontSize: 16, height: 1.5),
+          style: TextStyle(fontSize: 16, height: 1.5, color: colorScheme.onSurface),
           textAlign: TextAlign.justify,
         ),
       ],
     );
   }
 }
+

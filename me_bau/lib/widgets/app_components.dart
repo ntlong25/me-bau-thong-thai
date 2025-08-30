@@ -23,11 +23,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return AppBar(
       title: Text(title),
       centerTitle: centerTitle,
-      backgroundColor: backgroundColor ?? Colors.pink.shade50,
-      foregroundColor: foregroundColor ?? Colors.pink.shade700,
+      backgroundColor: backgroundColor ?? colorScheme.surface,
+      foregroundColor: foregroundColor ?? colorScheme.onSurface,
       elevation: elevation,
       automaticallyImplyLeading: automaticallyImplyLeading,
       actions: actions,
@@ -61,13 +62,14 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     Widget bottomNav = BottomNavigationBar(
       currentIndex: currentIndex,
       onTap: onTap,
       type: BottomNavigationBarType.fixed,
-      backgroundColor: Colors.white,
-      selectedItemColor: selectedItemColor ?? Colors.pink.shade600,
-      unselectedItemColor: unselectedItemColor ?? Colors.grey.shade600,
+      backgroundColor: colorScheme.surface,
+      selectedItemColor: selectedItemColor ?? colorScheme.primary,
+      unselectedItemColor: unselectedItemColor ?? colorScheme.onSurfaceVariant,
       selectedLabelStyle:
           selectedLabelStyle ?? const TextStyle(fontWeight: FontWeight.bold),
       items: items,
@@ -78,7 +80,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withValues(alpha: 0.2),
+              color: colorScheme.onSurface.withOpacity(0.1),
               blurRadius: 10,
               offset: const Offset(0, -2),
             ),
@@ -115,14 +117,15 @@ class PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return SizedBox(
       width: width ?? double.infinity,
       height: height ?? 56,
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.pink.shade600,
-          foregroundColor: Colors.white,
+          backgroundColor: colorScheme.primary,
+          foregroundColor: colorScheme.onPrimary,
           padding: padding ?? const EdgeInsets.symmetric(vertical: 12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -130,12 +133,12 @@ class PrimaryButton extends StatelessWidget {
           elevation: 4,
         ),
         child: isLoading
-            ? const SizedBox(
+            ? SizedBox(
                 width: 24,
                 height: 24,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  valueColor: AlwaysStoppedAnimation<Color>(colorScheme.onPrimary),
                 ),
               )
             : icon != null
@@ -189,14 +192,15 @@ class SecondaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return SizedBox(
       width: width ?? double.infinity,
       height: height ?? 56,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor ?? Colors.grey.shade100,
-          foregroundColor: foregroundColor ?? Colors.grey.shade700,
+          backgroundColor: backgroundColor ?? colorScheme.surfaceVariant,
+          foregroundColor: foregroundColor ?? colorScheme.onSurfaceVariant,
           padding: padding ?? const EdgeInsets.symmetric(vertical: 12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -250,14 +254,15 @@ class DangerButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return SizedBox(
       width: width ?? double.infinity,
       height: height ?? 56,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.red.shade100,
-          foregroundColor: Colors.red.shade700,
+          backgroundColor: colorScheme.errorContainer,
+          foregroundColor: colorScheme.onErrorContainer,
           padding: padding ?? const EdgeInsets.symmetric(vertical: 12),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -312,16 +317,17 @@ class CustomIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Container(
       padding: padding ?? const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: backgroundColor ?? Colors.pink.shade50,
+        color: backgroundColor ?? colorScheme.primaryContainer,
         borderRadius: BorderRadius.circular(8),
       ),
       child: IconButton(
         icon: Icon(
           icon,
-          color: foregroundColor ?? Colors.pink.shade600,
+          color: foregroundColor ?? colorScheme.onPrimaryContainer,
           size: size ?? 20,
         ),
         onPressed: onPressed,
@@ -345,6 +351,7 @@ class SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Row(
       children: [
         Expanded(
@@ -354,7 +361,7 @@ class SectionHeader extends StatelessWidget {
                 TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey.shade800,
+                  color: colorScheme.onSurface,
                 ),
           ),
         ),
@@ -377,13 +384,14 @@ class LoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(
-              color ?? Colors.pink.shade400,
+              color ?? colorScheme.primary,
             ),
           ),
           if (message != null) ...[
@@ -392,7 +400,7 @@ class LoadingWidget extends StatelessWidget {
               message!,
               style: TextStyle(
                 fontSize: 16,
-                color: Colors.grey.shade600,
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
           ],
@@ -419,6 +427,7 @@ class EmptyStateWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32.0),
@@ -428,7 +437,7 @@ class EmptyStateWidget extends StatelessWidget {
             Icon(
               icon,
               size: 64,
-              color: iconColor ?? Colors.grey.shade400,
+              color: iconColor ?? colorScheme.onSurfaceVariant,
             ),
             const SizedBox(height: 16),
             Text(
@@ -436,7 +445,7 @@ class EmptyStateWidget extends StatelessWidget {
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.grey.shade600,
+                color: colorScheme.onSurface,
               ),
               textAlign: TextAlign.center,
             ),
@@ -446,7 +455,7 @@ class EmptyStateWidget extends StatelessWidget {
                 subtitle!,
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.grey.shade500,
+                  color: colorScheme.onSurfaceVariant,
                 ),
                 textAlign: TextAlign.center,
               ),

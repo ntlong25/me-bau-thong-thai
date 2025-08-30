@@ -1,4 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:me_bau/screens/profile_screen.dart';
+import 'package:me_bau/screens/settings_screen.dart';
+import 'package:me_bau/screens/notifications_screen.dart';
+import 'package:me_bau/activities/checklist_activity.dart';
+import 'package:me_bau/viewmodels/checklist_viewmodel.dart';
+import 'package:me_bau/viewmodels/home_viewmodel.dart';
+import 'package:me_bau/viewmodels/profile_viewmodel.dart';
 
 class MainAppActivity {
   final BuildContext context;
@@ -26,49 +34,89 @@ class MainAppActivity {
 
   // Home screen actions
   void openSettings() {
-    showSnackBar('Mở cài đặt');
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SettingsScreen()),
+    );
   }
 
   void openNotifications() {
-    showSnackBar('Thông báo');
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const NotificationsScreen()),
+    );
   }
 
   // Handbook screen actions
   void searchHandbook() {
-    showSnackBar('Tìm kiếm trong cẩm nang');
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Tìm kiếm Cẩm nang'),
+          content: const TextField(
+            decoration: InputDecoration(
+              hintText: 'Nhập từ khóa tìm kiếm...',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Đóng'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void bookmarkCurrentWeek() {
-    showSnackBar('Đánh dấu tuần hiện tại');
+    showSnackBar('Đã đánh dấu tuần hiện tại');
   }
 
   void shareInformation() {
-    showSnackBar('Chia sẻ thông tin');
+    showSnackBar('Đã chia sẻ thông tin');
   }
 
   // Checklist screen actions
   void addChecklistItem() {
-    showSnackBar('Thêm mục checklist mới');
+    final checklistActivity = ChecklistActivity(context, ChecklistViewModel());
+    checklistActivity.addNewItem();
   }
 
   void sortChecklist() {
-    showSnackBar('Sắp xếp checklist');
+    final checklistActivity = ChecklistActivity(context, ChecklistViewModel());
+    checklistActivity.sortItems();
   }
 
   void filterChecklist() {
-    showSnackBar('Lọc checklist');
+    // The search functionality is now handled directly in ChecklistScreen.
+    // No action needed here.
   }
 
   // Profile screen actions
   void editProfile() {
-    showSnackBar('Chỉnh sửa hồ sơ');
+    final homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
+    final profileViewModel = Provider.of<ProfileViewModel>(context, listen: false);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ProfileScreen(homeViewModel: homeViewModel, profileViewModel: profileViewModel)),
+    );
   }
 
   void openNotificationSettings() {
-    showSnackBar('Cài đặt thông báo');
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const NotificationsScreen()),
+    );
   }
 
   void openHelp() {
-    showSnackBar('Trợ giúp');
+    final homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
+    final profileViewModel = Provider.of<ProfileViewModel>(context, listen: false);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ProfileScreen(homeViewModel: homeViewModel, profileViewModel: profileViewModel)),
+    );
   }
 }

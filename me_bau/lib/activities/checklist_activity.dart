@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../viewmodels/checklist_viewmodel.dart';
-import '../models/checklist_item.dart';
 
 class ChecklistActivity {
   final ChecklistViewModel viewModel;
@@ -136,11 +135,6 @@ class ChecklistActivity {
     _showMessage('Đã sắp xếp checklist');
   }
 
-  // Handle filter items
-  List<ChecklistItem> filterItems(String query) {
-    return viewModel.getFilteredItems(query);
-  }
-
   // Handle reset all items
   Future<void> resetAllItems() async {
     await showDialog(
@@ -233,39 +227,6 @@ class ChecklistActivity {
   // Handle refresh
   Future<void> refresh() async {
     await viewModel.loadChecklist();
-  }
-
-  // Handle search
-  void showSearchDialog() {
-    final TextEditingController searchController = TextEditingController();
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Tìm kiếm'),
-          content: TextField(
-            controller: searchController,
-            decoration: const InputDecoration(
-              hintText: 'Nhập từ khóa tìm kiếm...',
-              border: OutlineInputBorder(),
-            ),
-            onChanged: (value) {
-              // Filter items based on search
-              final filteredItems = filterItems(value);
-              // Update UI with filtered items
-              _showMessage('Tìm thấy ${filteredItems.length} kết quả');
-            },
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Đóng'),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   // Handle bulk actions

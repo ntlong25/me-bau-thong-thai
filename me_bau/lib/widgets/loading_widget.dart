@@ -9,6 +9,7 @@ class LoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -19,7 +20,7 @@ class LoadingWidget extends StatelessWidget {
             child: CircularProgressIndicator(
               strokeWidth: 3,
               valueColor: AlwaysStoppedAnimation<Color>(
-                color ?? Colors.pink.shade600,
+                color ?? colorScheme.primary,
               ),
             ),
           ),
@@ -27,7 +28,7 @@ class LoadingWidget extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               message!,
-              style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
+              style: TextStyle(fontSize: 16, color: colorScheme.onSurfaceVariant),
               textAlign: TextAlign.center,
             ),
           ],
@@ -51,12 +52,13 @@ class LoadingOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Stack(
       children: [
         child,
         if (isLoading)
           Container(
-            color: Colors.black.withValues(alpha: 0.3),
+            color: colorScheme.onSurface.withOpacity(0.3),
             child: LoadingWidget(message: loadingMessage ?? 'Đang tải...'),
           ),
       ],
@@ -78,16 +80,17 @@ class ShimmerLoading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Container(
       height: height,
       width: width,
       decoration: BoxDecoration(
-        color: Colors.grey.shade300,
+        color: colorScheme.surfaceVariant,
         borderRadius: borderRadius ?? BorderRadius.circular(4),
       ),
-      child: const LinearProgressIndicator(
+      child: LinearProgressIndicator(
         backgroundColor: Colors.transparent,
-        valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+        valueColor: AlwaysStoppedAnimation<Color>(colorScheme.onSurfaceVariant),
       ),
     );
   }
@@ -101,16 +104,17 @@ class SkeletonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Container(
       height: height,
       padding: padding ?? const EdgeInsets.all(16.0),
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withValues(alpha: 0.1),
+            color: colorScheme.onSurface.withOpacity(0.1),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),

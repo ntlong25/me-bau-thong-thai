@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../viewmodels/splash_viewmodel.dart';
 import '../screens/onboarding_screen.dart';
+import '../screens/main_app_screen.dart';
+import '../services/pregnancy_service.dart';
 
 class SplashActivity {
   final BuildContext context;
@@ -21,10 +23,14 @@ class SplashActivity {
     await Future.delayed(const Duration(milliseconds: 300));
     viewModel.startScaleAnimation();
 
-    // Navigate to onboarding after 2 seconds
+    // Navigate after 2 seconds
     await Future.delayed(const Duration(milliseconds: 2000));
     if (context.mounted) {
-      _navigateToOnboarding();
+      if (await PregnancyService.hasUserInfo()) {
+        _navigateToMainApp();
+      } else {
+        _navigateToOnboarding();
+      }
     }
   }
 
@@ -34,6 +40,20 @@ class SplashActivity {
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
             const OnboardingScreen(),
+        transitionDuration: const Duration(milliseconds: 500),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+      ),
+    );
+  }
+
+  void _navigateToMainApp() {
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const MainAppScreen(),
         transitionDuration: const Duration(milliseconds: 500),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);

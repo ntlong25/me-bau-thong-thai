@@ -4,8 +4,9 @@ import '../viewmodels/home_viewmodel.dart';
 class HomeActivity {
   final HomeViewModel viewModel;
   final BuildContext context;
+  final Function(int) onNavigateToTab;
 
-  HomeActivity(this.context, this.viewModel);
+  HomeActivity(this.context, this.viewModel, this.onNavigateToTab);
 
   // Initialize the home screen
   Future<void> initialize() async {
@@ -61,20 +62,17 @@ class HomeActivity {
 
   // Navigate to handbook
   void _navigateToHandbook() {
-    // This will be handled by the main app screen
-    // The navigation logic is in MainAppScreen
+    onNavigateToTab(1); // Index for Handbook tab
   }
 
   // Navigate to checklist
   void _navigateToChecklist() {
-    // This will be handled by the main app screen
-    // The navigation logic is in MainAppScreen
+    onNavigateToTab(2); // Index for Checklist tab
   }
 
   // Navigate to profile
   void _navigateToProfile() {
-    // This will be handled by the main app screen
-    // The navigation logic is in MainAppScreen
+    onNavigateToTab(3); // Index for Profile tab
   }
 
   // Show success message

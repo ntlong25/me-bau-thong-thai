@@ -5,10 +5,12 @@ import '../services/pregnancy_service.dart';
 
 class ChecklistViewModel extends ChangeNotifier {
   List<ChecklistItem> _checklistItems = [];
+  List<ChecklistItem> _filteredChecklistItems = [];
   bool _isLoading = false;
 
   // Getters
   List<ChecklistItem> get checklistItems => _checklistItems;
+  List<ChecklistItem> get filteredChecklistItems => _filteredChecklistItems;
   bool get isLoading => _isLoading;
   int get totalItems => _checklistItems.length;
   int get completedItems =>
@@ -19,6 +21,7 @@ class ChecklistViewModel extends ChangeNotifier {
   // Initialize with default checklist items
   ChecklistViewModel() {
     _initializeDefaultItems();
+    _filteredChecklistItems = List.from(_checklistItems);
   }
 
   void _initializeDefaultItems() {
@@ -47,6 +50,7 @@ class ChecklistViewModel extends ChangeNotifier {
             .map((json) => ChecklistItem.fromJson(json))
             .toList();
       }
+      _filteredChecklistItems = List.from(_checklistItems);
       notifyListeners();
     } catch (e) {
       debugPrint('Error loading checklist: $e');
@@ -72,6 +76,7 @@ class ChecklistViewModel extends ChangeNotifier {
     if (index >= 0 && index < _checklistItems.length) {
       _checklistItems[index].isCompleted =
           value ?? !_checklistItems[index].isCompleted;
+      _filteredChecklistItems = List.from(_checklistItems);
       notifyListeners();
       await saveChecklist();
     }
@@ -81,6 +86,7 @@ class ChecklistViewModel extends ChangeNotifier {
   Future<void> updateItemNotes(int index, String notes) async {
     if (index >= 0 && index < _checklistItems.length) {
       _checklistItems[index].notes = notes.isEmpty ? null : notes;
+      _filteredChecklistItems = List.from(_checklistItems);
       notifyListeners();
       await saveChecklist();
     }
@@ -90,6 +96,7 @@ class ChecklistViewModel extends ChangeNotifier {
   Future<void> addItem(String name) async {
     if (name.trim().isNotEmpty) {
       _checklistItems.add(ChecklistItem(name: name.trim()));
+      _filteredChecklistItems = List.from(_checklistItems);
       notifyListeners();
       await saveChecklist();
     }
@@ -99,6 +106,7 @@ class ChecklistViewModel extends ChangeNotifier {
   Future<void> removeItem(int index) async {
     if (index >= 0 && index < _checklistItems.length) {
       _checklistItems.removeAt(index);
+      _filteredChecklistItems = List.from(_checklistItems);
       notifyListeners();
       await saveChecklist();
     }
@@ -113,20 +121,25 @@ class ChecklistViewModel extends ChangeNotifier {
       }
       return a.name.compareTo(b.name);
     });
+    _filteredChecklistItems = List.from(_checklistItems);
     notifyListeners();
   }
 
   // Filter items
-  List<ChecklistItem> getFilteredItems(String query) {
-    if (query.isEmpty) return _checklistItems;
-    return _checklistItems
-        .where(
-          (item) =>
-              item.name.toLowerCase().contains(query.toLowerCase()) ||
-              (item.notes?.toLowerCase().contains(query.toLowerCase()) ??
-                  false),
-        )
-        .toList();
+  void filterChecklist(String query) {
+    if (query.isEmpty) {
+      _filteredChecklistItems = List.from(_checklistItems);
+    } else {
+      _filteredChecklistItems = _checklistItems
+          .where(
+            (item) =>
+                item.name.toLowerCase().contains(query.toLowerCase()) ||
+                (item.notes?.toLowerCase().contains(query.toLowerCase()) ??
+                    false),
+          )
+          .toList();
+    }
+    notifyListeners();
   }
 
   // Get items by completion status
@@ -141,6 +154,7 @@ class ChecklistViewModel extends ChangeNotifier {
     for (var item in _checklistItems) {
       item.isCompleted = false;
     }
+    _filteredChecklistItems = List.from(_checklistItems);
     notifyListeners();
     await saveChecklist();
   }
@@ -150,6 +164,7 @@ class ChecklistViewModel extends ChangeNotifier {
     for (var item in _checklistItems) {
       item.isCompleted = true;
     }
+    _filteredChecklistItems = List.from(_checklistItems);
     notifyListeners();
     await saveChecklist();
   }
